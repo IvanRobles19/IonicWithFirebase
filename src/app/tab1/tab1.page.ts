@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { AuthService } from '../services/auth.service';
 
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -40,7 +41,11 @@ export class Tab1Page {
     }
   ];
 
-  constructor(private cartService: CartService, private router: Router, private productService: ProductService, private authService: AuthService) {
+  constructor(private cartService: CartService, private router: Router
+    , private productService: ProductService, 
+    private authService: AuthService
+    
+    ) {
     this.productService.getProducts().subscribe((products: Product[]) => {
       this.products = products;
       this.productsFounds = this.products;

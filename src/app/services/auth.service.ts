@@ -3,7 +3,6 @@ import { Observable, of } from 'rxjs';
 import { User } from '../models/user.model';
 import { SHA256, enc } from "crypto-js";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -13,12 +12,12 @@ export class AuthService {
 
   constructor() {
     this.users.push({
-      username: "isra",
+      username: "paul",
       password: "12345",
       type: "administrator"
     });
     this.users.push({
-      username: "isra2",
+      username: "paul2",
       password: "12345",
       type: "administrator"
     });

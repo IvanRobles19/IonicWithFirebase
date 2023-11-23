@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { CartService } from '../services/cart.service';
-import { Cart, Product, CartItem } from '../models/product.model';
+import { Cart, CartItem } from '../models/product.model';
 import { AlertController } from '@ionic/angular';
-
 
 @Component({
   selector: 'app-tab2',
@@ -11,10 +10,12 @@ import { AlertController } from '@ionic/angular';
 })
 export class Tab2Page {
 
-  public cart: Cart;
+  public cart!: Cart;
 
   constructor(private cartService: CartService, private alertController: AlertController) {
-    this.cart = this.cartService.getCart();
+    this.cartService.getCart().subscribe((cart) => {
+      this.cart = cart;
+    });
   }
 
   async promptRemoveItem(item: CartItem) {
@@ -40,14 +41,13 @@ export class Tab2Page {
           handler: (data) => {
             const quantityToRemove = parseInt(data.quantity, 10);
             if (quantityToRemove > 0) {
-              this.cartService.removeItemFromCart(item, quantityToRemove);
+              this.cartService.removeItemFromCart(item);
             }
           },
         },
       ],
     });
-  
+
     await alert.present();
   }
-
 }
