@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Product } from '../models/product.model';
 import { AngularFirestore,AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,10 @@ export class ProductService {
   private products: Observable <Product [] >;
 
   private productCollection: AngularFirestoreCollection<Product>;
+
+  private productsFav: Observable <Product [] >;
+
+  private productCollectionFav: AngularFirestoreCollection<Product>;
 
   constructor(private firestore:AngularFirestore) {
    // this.products.push({
@@ -41,10 +46,18 @@ export class ProductService {
     //  type: "Farmacia",
     //  photo: "https://picsum.photos/500/300?random"
     //});
-    this.productCollection = 
-    firestore.collection<Product>('products');
-    this.products = 
-    this.productCollection.valueChanges();
+    this.productCollection = firestore.collection<Product>('products');
+    this.productCollectionFav = firestore.collection<Product>('favorites');
+    this.productsFav = this.productCollectionFav.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Product;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+    this.products = this.productCollection.valueChanges();
   }
 
   saveProduct(product: Product): Promise<String> {
@@ -65,4 +78,21 @@ export class ProductService {
   getProducts(): Observable<Product[]> {
     return this.products;
   }
+
+  getProductsFav(): Observable<Product[]> {
+    return this.productsFav;
+  }
+
+  addProductFav(product: Product): Promise<any> {
+    return this.productCollectionFav.add(product);
+   }
+
+   deleteProductFav(product: Product): Promise<any> {
+    return this.productCollectionFav.doc(product.id).delete();
+   }
+
+   editProduct(product: Product): Promise<any> {
+    return this.productCollectionFav.doc(product.id).update(product);
+   }
+
 }

@@ -76,6 +76,16 @@ export class Tab1Page {
     console.log(this.cartService.getCart());
   }
 
+  public addToFav(product: Product, i: number) {
+    product.photo = product.photo + i;
+    this.productService.addProductFav(product);
+    console.log(this.productService.getProductsFav());
+  }
+
+  public editProduct(product: Product) {
+    this.productService.editProduct(product);
+  }
+
   openProductAddPage() {
     this.router.navigate(['/add-product']); // Asume que la ruta 'product-add' existe para añadir productos.
   }
