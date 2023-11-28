@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductService {
+  private productEdit: Product;
   private products: Observable <Product [] >;
 
   private productCollection: AngularFirestoreCollection<Product>;
@@ -46,6 +47,13 @@ export class ProductService {
     //  type: "Farmacia",
     //  photo: "https://picsum.photos/500/300?random"
     //});
+    this.productEdit = {
+       name: "Aguacate",
+       price: 100,
+       description: "Lorem ipsum dolor sit amet.",
+       type: "Frutas y Verduras",
+       photo: "https://picsum.photos/500/300?random",
+      };
     this.productCollection = firestore.collection<Product>('products');
     this.productCollectionFav = firestore.collection<Product>('favorites');
     this.productsFav = this.productCollectionFav.snapshotChanges().pipe(
@@ -57,7 +65,17 @@ export class ProductService {
         });
       })
     );
-    this.products = this.productCollection.valueChanges();
+
+    //this.products = this.productCollection.valueChanges();
+    this.products = this.productCollection.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Product;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
   }
 
   saveProduct(product: Product): Promise<String> {
@@ -91,8 +109,25 @@ export class ProductService {
     return this.productCollectionFav.doc(product.id).delete();
    }
 
-   editProduct(product: Product): Promise<any> {
-    return this.productCollectionFav.doc(product.id).update(product);
+   editProduct(product: Product): Promise<String> {
+    const { id, ...productData } = product;
+    return new Promise<string>((resolve, reject) => {
+      this.productCollection.doc(id).update(productData)
+        .then(() => {
+          resolve('success'); // Resuelve la promesa con 'success' en caso de éxito
+        })
+        .catch(error => {
+          console.error('Error al actualizar el producto:', error);
+          reject(error); // Rechaza la promesa con el error si hay algún problema
+        });
+    });
    }
+
+   setProductEdit(product: Product){
+    this.productEdit = product;
+   }
+    getProductEdit(): Product{
+      return this.productEdit;
+    }
 
 }

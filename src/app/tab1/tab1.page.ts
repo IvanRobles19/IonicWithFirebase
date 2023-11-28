@@ -83,7 +83,8 @@ export class Tab1Page {
   }
 
   public editProduct(product: Product) {
-    this.productService.editProduct(product);
+    this.productService.setProductEdit(product);
+    this.router.navigate(['/update-product']);
   }
 
   openProductAddPage() {

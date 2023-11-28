@@ -15,6 +15,7 @@ export class AddProductPage {
   public productForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private productService: ProductService, private toastController: ToastController, private router: Router) {
+    
     this.productForm = this.formBuilder.group({
       name: ['', Validators.required],
       price: ['', Validators.required],
@@ -22,6 +23,7 @@ export class AddProductPage {
       photo: [''],
       type: ['', Validators.required]
     });
+
   }
 
   async saveProduct() {

@@ -47,8 +47,8 @@
 
     <ion-row>
       <ion-col size="6" *ngFor="let product of productsFounds; index as i">
-        <ion-card>
-          <img [src]="product.photo+i"/>
+        <ion-card >
+          <img [src]="product.photo+i" (click)="editProduct(product)"/>
           <ion-card-header>
             <ion-card-title>
               {{product.name}}
