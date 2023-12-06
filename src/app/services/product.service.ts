@@ -61,7 +61,9 @@ export class ProductService {
         return actions.map(a => {
           const data = a.payload.doc.data() as Product;
           const id = a.payload.doc.id;
-          return { id, ...data };
+    
+          // Asigna el ID del documento directamente al objeto Product
+          return { ...data, id };
         });
       })
     );
@@ -106,6 +108,7 @@ export class ProductService {
    }
 
    deleteProductFav(product: Product): Promise<any> {
+    console.log(product.id);
     return this.productCollectionFav.doc(product.id).delete();
    }
 

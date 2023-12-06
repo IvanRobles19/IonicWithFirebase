@@ -12,15 +12,11 @@ export class AuthService {
 
   constructor() {
     this.users.push({
-      username: "paul",
+      username: "ivan",
       password: "12345",
       type: "administrator"
     });
-    this.users.push({
-      username: "paul2",
-      password: "12345",
-      type: "administrator"
-    });
+    
     
   }
 
